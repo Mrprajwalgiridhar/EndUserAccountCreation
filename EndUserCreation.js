@@ -144,7 +144,7 @@ function handleFile(event) {
             var selectedRadio = document.querySelector('input[name="flexRadioDefault"]:checked');
             if (selectedRadio) {
                 var radioValue = selectedRadio.value;
-                var impexFilePath = "../assests/" + radioValue + ".impex";
+                var impexFilePath = "./" + radioValue + ".impex";
 
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
