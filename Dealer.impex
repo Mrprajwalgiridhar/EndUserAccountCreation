@@ -1,0 +1,84 @@
+# DEALER
+
+$lineOfBusiness=dealer 
+#hospital,privatehospital,clinic,dealer,distributor,serviceprovider,3rdpartyserviceprovider
+$websiteUid=healthcareSite_JP
+$siteAccess=allowedsite(uid)[virtual=true,default=$websiteUid]
+$lineOfBusinessHeader=lineOfBuisness(code)[default=$lineOfBusiness,virtual=true]
+
+INSERT b2bunit;uid[unique=true];name;locname[lang = en];locname[lang=ja];$lineOfBusinessHeader;$siteAccess;
+;<UCM ID>;<Customer Name-Japanese>;<Customer Name-Japanese>;<Customer Name-Japanese>;
+
+
+#2.JSST
+UPDATE B2BUnit;uid[unique=true];ucmid;jsstAccountNo;
+;<UCM ID>;<UCM ID>;<JSST#>;
+
+
+#3.OracleId
+UPDATE B2BUnit;uid[unique=true];oracleAccountID;
+;<UCM ID>;<Oracle #>;
+
+
+#4.Discount
+UPDATE b2bunit;uid[unique=true];userDiscountGroup(code)
+;<UCM ID>;JP_ABS_DISC_DEALER;
+
+
+#5.Rfqcheckout
+INSERT_UPDATE HCApplicationSettings;code;paramCode(code)[unique=true];principal(uid)[unique=true];setting
+;RFQ-<UCM ID>;RFQ;<UCM ID>;true
+;checkout-<UCM ID>;checkout;<UCM ID>;true
+
+
+#6.EOI
+UPDATE LegalEntityOUMapping;code[unique=true];site(uid)[unique=true][default=healthcareSite_JP];&ouCode
+;GE_Healthcare_JP;;GE_Healthcare_JP
+
+######OU_LE_AccountAssociattion####
+UPDATE B2BUnit;uid[unique=true];ordIntLegalEntities(&ouCode);enableOrderIntegration[default=true]
+;<UCM ID>;GE_Healthcare_JP;
+
+
+#7.ShipTo
+INSERT address;&addressID;streetname;streetnumber;appartment;phone1;town;region(isocode);postalcode;country(isocode);owner(b2bunit.uid)[unique=true];siteId[unique=true];operatingUnit(code,country(isoCode));accountID;shippingAddress[virtual=true,default=true]
+;<UCM ID>_DefShip;<Address Line 1 (Facility name)>;<Address Line 2>;;<Phone number (mandatory for ship to)>;<City>;<Prefecture>;<Postal code (without -)>;JP;<UCM ID>;<Oracle Ship to Location ID>;GEMSAS_OU_JPY_GOLDSEAL_JAPAN:JP;<Oracle #>;
+
+
+UPDATE b2bunit;uid[unique=true];shippingAddress(&addressID);
+;<UCM ID>;<UCM ID>_DefShip;
+
+
+#8.ContactTo
+INSERT_UPDATE address;&addressID;streetname;streetnumber;appartment;phone1;town;region(isocode);postalcode;country(isocode);owner(b2bunit.uid)[unique=true];accountID;operatingUnit(code,country(isoCode));siteId[unique=true];contactAddress[virtual=true,default=true];
+;<UCM ID>_DefOrg;<Address Line 1 (Facility name)>;<Address Line 2>;;<Phone number (mandatory for ship to)>;<City>;<Prefecture>;<Postal code (without -)>;JP;<UCM ID>;<Oracle #>;GEMSAS_OU_JPY_GOLDSEAL_JAPAN:JP;<Oracle Ship to Location ID>;
+
+
+UPDATE b2bunit;uid[unique=true];contactAddress(&addressID);
+;<UCM ID>;<UCM ID>_DefOrg;
+
+
+#9.BillTo
+INSERT address;&addressID;streetname;streetnumber;appartment;phone1;town;region(isocode);postalcode;country(isocode);owner(b2bunit.uid)[unique=true];siteId[unique=true];operatingUnit(code,country(isoCode));accountID;billingAddress[virtual=true,default=true]
+;<UCM ID>_DefBill;<Address Line 1 (Facility name)>;<Address Line 2>;;<Phone number (mandatory for ship to)>;<City>;<Prefecture>;<Postal code (without -)>;JP;<UCM ID>;<Oracle bill to location ID>;GEMSAS_OU_JPY_GOLDSEAL_JAPAN:JP;<Oracle #>;
+
+
+
+UPDATE b2bunit;uid[unique=true];billingAddress(&addressID);
+;<UCM ID>;<UCM ID>_DefBill;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
