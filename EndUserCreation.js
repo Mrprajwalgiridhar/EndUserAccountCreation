@@ -1,7 +1,10 @@
 var textarea = document.getElementById('floatingTextarea');
 textarea.spellcheck = false;
 
-
+function refreshPage() {
+    // Reload the current page
+    location.reload();
+}
 
 function copyText() {
     var textToCopy = document.getElementById("floatingTextarea");
